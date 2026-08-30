@@ -1,6 +1,6 @@
 # skills
 
-The single source of truth for my coding-agent skills. Every skill lives in this repo — browse them in [`.agents/skills/`](.agents/skills). [`skills-lock.json`](skills-lock.json) records where each one originally came from, so upstream updates still flow (see Update below).
+The single source of truth for my coding-agent skills. Every skill lives in this repo — browse them in [`.agents/skills/`](.agents/skills). [`upstream-lock.json`](upstream-lock.json) records where each one originally came from, so upstream updates still flow (see Update below). It uses that name because a root `skills-lock.json` makes the skills CLI treat this repo as a consumer instead of a source; [`manage.sh`](manage.sh) swaps it into place for add/update runs.
 
 ## Install (any machine, or Claude Code cloud)
 
@@ -14,7 +14,7 @@ On a real machine this installs globally (`~/.agents/skills` + symlinks into Cla
 
 ```bash
 # in a clone of this repo
-npx skills add <owner/repo> -y
+./manage.sh add <owner/repo> -y
 git add -A && git commit -m "feat: add <skill>" && git push
 ```
 
@@ -26,7 +26,7 @@ Two steps — refresh the repo from upstream, then machines pull from the repo:
 
 ```bash
 # 1. in a clone of this repo: pull latest from each skill's original source
-npx skills update -p -y
+./manage.sh update -p -y
 git add -A && git commit -m "chore: update skills" && git push
 
 # 2. on each machine
