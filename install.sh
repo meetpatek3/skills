@@ -18,6 +18,7 @@ add ueberdosis/tiptap -s tiptap
 add microsoft/playwright-cli -s playwright-cli
 add anthropics/skills -s frontend-design
 add vercel-labs/skills -s find-skills
+add vercel-labs/agent-skills -s vercel-composition-patterns vercel-optimize vercel-react-native-skills vercel-react-view-transitions web-design-guidelines writing-guidelines
 
 repo_dir="$(cd "$(dirname "$0")" && pwd)"
 if find "$repo_dir/skills" -name SKILL.md -print -quit 2>/dev/null | grep -q .; then
