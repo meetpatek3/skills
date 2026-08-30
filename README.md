@@ -1,24 +1,36 @@
 # skills
 
-The single source of truth for my coding-agent skills. One command installs everything, on any machine or Claude Code cloud session, for every agent (Claude Code, Codex, Cursor, …).
+The single source of truth for my coding-agent skills. Every skill lives in this repo — browse them in [`.agents/skills/`](.agents/skills). [`skills-lock.json`](skills-lock.json) records where each one originally came from, so upstream updates still flow (see Update below).
 
-## Install
+## Install (any machine, or Claude Code cloud)
 
 ```bash
 git clone --depth 1 https://github.com/meetpatek3/skills /tmp/meet-skills && bash /tmp/meet-skills/install.sh
 ```
 
-On a real machine this installs globally (`~/.agents/skills` + symlinks into each agent). In Claude Code cloud (`CLAUDE_CODE_REMOTE=true`) it installs project-scoped; the canopy repo runs it automatically via a SessionStart hook.
+On a real machine this installs globally (`~/.agents/skills` + symlinks into Claude Code, Codex, Cursor, …) plus the Vercel plugin. In Claude Code cloud (`CLAUDE_CODE_REMOTE=true`) it installs project-scoped; the canopy repo runs it automatically via a SessionStart hook.
+
+## Add a skill (from skills.sh or any GitHub repo)
+
+```bash
+# in a clone of this repo
+npx skills add <owner/repo> -y
+git add -A && git commit -m "feat: add <skill>" && git push
+```
+
+Skills I author myself go in [`skills/`](skills), one folder per skill with a `SKILL.md` (`npx skills init <name>` scaffolds one).
 
 ## Update
 
+Two steps — refresh the repo from upstream, then machines pull from the repo:
+
 ```bash
-npx skills update -y
-npx plugins add vercel/vercel-plugin -y
+# 1. in a clone of this repo: pull latest from each skill's original source
+npx skills update -p -y
+git add -A && git commit -m "chore: update skills" && git push
+
+# 2. on each machine
+npx skills update -g -y
 ```
 
-Updates pull from each skill's original repo (Matt Pocock, Anthropic, Vercel, …) — `install.sh` only records which sources I use.
-
-## My own skills
-
-Skills I author live in `skills/`. `install.sh` picks them up automatically once the first one exists (`npx skills init <name>` scaffolds one).
+Step 1's diff is the review point: skills run with full agent permissions, so eyeball what changed before committing.
