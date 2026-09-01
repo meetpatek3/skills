@@ -8,7 +8,15 @@ The single source of truth for my coding-agent skills. Every skill lives in this
 git clone --depth 1 https://github.com/meetpatek3/skills /tmp/meet-skills && bash /tmp/meet-skills/install.sh
 ```
 
-On a real machine this installs globally (`~/.agents/skills` + symlinks into Claude Code, Codex, Cursor, …) plus the Vercel plugin. In Claude Code cloud (`CLAUDE_CODE_REMOTE=true`) it installs project-scoped; the canopy repo runs it automatically via a SessionStart hook.
+This always installs globally — skills land in `~/.agents/skills` with symlinks into Claude Code, Codex, Cursor and friends. On a real machine it also installs the Vercel plugin.
+
+### Claude Code cloud
+
+Global is what makes the skills project-independent in the cloud: `$HOME` is part of the environment snapshot, so the skills are there no matter which repo a session opens. Run the install from the environment's **setup script** (claude.ai/code → environment settings), not from a per-repo `SessionStart` hook — a hook only fires for the one repo that carries it. Paste the same one-liner from above.
+
+Setup scripts must exit 0 or the session fails to start, which `install.sh` guarantees. Expect `✗ ... does not support global skill installation` lines for Eve and PromptScript — those two agents have no global mode, and the other agents still install fine.
+
+The snapshot is reused across sessions and refreshed when you edit the setup script, change allowed network hosts, or after about a week — so new skills reach cloud sessions on that cadence unless you edit the script to force a rebuild.
 
 ## Add a skill (from skills.sh or any GitHub repo)
 

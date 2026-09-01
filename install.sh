@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # One command installs every skill on any machine or Claude Code cloud session:
 #   git clone --depth 1 https://github.com/meetpatek3/skills /tmp/meet-skills && bash /tmp/meet-skills/install.sh
+#
+# Always installs globally (~/.agents/skills + per-agent symlinks). In Claude Code
+# cloud that is what makes the skills project-independent: $HOME is snapshotted by
+# the environment, so every session gets them regardless of which repo it opens.
 set -uo pipefail
 
-scope="-g"
-[ "${CLAUDE_CODE_REMOTE:-}" = "true" ] && scope=""
-
-npx -y skills add meetpatek3/skills $scope --all || echo "warn: skills install failed"
+npx -y skills add meetpatek3/skills -g --all || echo "warn: skills install failed"
 
 if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
   npx -y plugins add vercel/vercel-plugin -y || echo "warn: vercel plugin install failed"
